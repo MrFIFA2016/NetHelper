@@ -31,4 +31,10 @@
             android:layout_margin="@dimen/fab_margin"
             app:srcCompat="@android:drawable/ic_dialog_email"/>
 
+    <Button
+        android:id="@+id/sendHttp"
+        android:layout_width="251dp"
+        android:layout_height="112dp"
+        android:text="Button" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
