@@ -53,6 +53,8 @@ public class WsManager implements IWsManager {
 
     public abstract static class MessageListener {
         public abstract void onMessage(String message);
+
+        public abstract void onError(String error);
     }
 
     private final WebSocketListener mWebSocketListener = new WebSocketListener() {
@@ -63,7 +65,7 @@ public class WsManager implements IWsManager {
             setCurrentStatus(WsStatus.CONNECTED);
             connected();
             if (Looper.myLooper() != Looper.getMainLooper()) {
-                onMessage(null," 已连接！");
+                onMessage(null, " 已连接！");
             } else {
                 Log.e("websocket", "服务器连接成功");
             }
@@ -102,6 +104,9 @@ public class WsManager implements IWsManager {
 
         @Override
         public void onClosed(WebSocket webSocket, final int code, final String reason) {
+            for (MessageListener listener : messageListeners) {
+                listener.onError("连接已关闭");
+            }
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 wsMainHandler.post(new Runnable() {
                     @Override
@@ -117,6 +122,9 @@ public class WsManager implements IWsManager {
         @Override
         public void onFailure(WebSocket webSocket, final Throwable t, final Response response) {
             try {
+                for (MessageListener listener : messageListeners) {
+                    listener.onError("重试连接 " + reconnectCount);
+                }
                 tryReconnect();
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     wsMainHandler.post(new Runnable() {
@@ -264,7 +272,7 @@ public class WsManager implements IWsManager {
     }
 
     public boolean sendMessage(WsReq req) {
-        if(req.getReqId()==null)
+        if (req.getReqId() == null)
             req.setReqId(String.valueOf(System.currentTimeMillis()));
         return send(req.toJsonString());
     }

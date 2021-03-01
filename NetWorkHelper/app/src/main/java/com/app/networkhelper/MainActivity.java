@@ -43,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
         BootStrap.wsManager.addMessageListener(new WsManager.MessageListener() {
             @Override
             public void onMessage(String message) {
-                //Toast.makeText(MainActivity.this, "主窗口收到消息：" + message, Toast.LENGTH_SHORT).show();
                 showInfo(message);
+            }
+
+            @Override
+            public void onError(String error) {
+                showInfo(error);
             }
         });
 
