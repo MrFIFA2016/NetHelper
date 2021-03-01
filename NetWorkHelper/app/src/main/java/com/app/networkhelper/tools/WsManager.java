@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -40,8 +42,18 @@ public class WsManager implements IWsManager {
             buildConnect();
         }
     };
-    //private static VideoPresenter videoPresenter = new VideoPresenter();
-    private WebSocketListener mWebSocketListener = new WebSocketListener() {
+
+    private List<MessageListener> messageListeners = new LinkedList<>();
+
+    public void addMessageListener(MessageListener listener) {
+        messageListeners.add(listener);
+    }
+
+    public abstract static class MessageListener {
+        public abstract void onMessage(String message);
+    }
+
+    private final WebSocketListener mWebSocketListener = new WebSocketListener() {
 
         @Override
         public void onOpen(WebSocket webSocket, final Response response) {
@@ -55,19 +67,19 @@ public class WsManager implements IWsManager {
             }
         }
 
-        @Override
-        public void onMessage(WebSocket webSocket, final ByteString bytes) {
-            if (Looper.myLooper() != Looper.getMainLooper()) {
-                wsMainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.e("websocket", "WsManager-----onMessage");
-                    }
-                });
-            } else {
-                Log.e("websocket", "WsManager-----onMessage");
-            }
-        }
+//        @Override
+//        public void onMessage(WebSocket webSocket, final ByteString bytes) {
+//            if (Looper.myLooper() != Looper.getMainLooper()) {
+//                wsMainHandler.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Log.e("websocket", "WsManager-----onMessage");
+//                    }
+//                });
+//            } else {
+//                Log.e("websocket", "WsManager-----onMessage");
+//            }
+//        }
 
         @Override
         public void onMessage(WebSocket webSocket, final String text) {
@@ -76,7 +88,9 @@ public class WsManager implements IWsManager {
                     @Override
                     public void run() {
                         Log.e("websocket", text);
-                        Toast.makeText(mContext, text, Toast.LENGTH_SHORT).show();
+                        for (MessageListener listener : messageListeners) {
+                            listener.onMessage(text);
+                        }
                     }
                 });
             } else {
@@ -100,7 +114,6 @@ public class WsManager implements IWsManager {
 
         @Override
         public void onClosed(WebSocket webSocket, final int code, final String reason) {
-
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 wsMainHandler.post(new Runnable() {
                     @Override
@@ -117,7 +130,6 @@ public class WsManager implements IWsManager {
         public void onFailure(WebSocket webSocket, final Throwable t, final Response response) {
             try {
                 tryReconnect();
-                Log.e("liusehngjei", "[走的链接失败这里！！！！！！！！！！！！！！！！]");
                 if (Looper.myLooper() != Looper.getMainLooper()) {
                     wsMainHandler.post(new Runnable() {
                         @Override
