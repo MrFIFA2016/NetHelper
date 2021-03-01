@@ -9,6 +9,8 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.app.networkhelper.to.WsReq;
+
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
@@ -61,25 +63,11 @@ public class WsManager implements IWsManager {
             setCurrentStatus(WsStatus.CONNECTED);
             connected();
             if (Looper.myLooper() != Looper.getMainLooper()) {
-                sendMessage("open!");
+                onMessage(null," 已连接！");
             } else {
                 Log.e("websocket", "服务器连接成功");
             }
         }
-
-//        @Override
-//        public void onMessage(WebSocket webSocket, final ByteString bytes) {
-//            if (Looper.myLooper() != Looper.getMainLooper()) {
-//                wsMainHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Log.e("websocket", "WsManager-----onMessage");
-//                    }
-//                });
-//            } else {
-//                Log.e("websocket", "WsManager-----onMessage");
-//            }
-//        }
 
         @Override
         public void onMessage(WebSocket webSocket, final String text) {
@@ -218,12 +206,10 @@ public class WsManager implements IWsManager {
         if (!isNetworkConnected(mContext)) {
             setCurrentStatus(WsStatus.DISCONNECTED);
             Log.e("liusehngjei", "[请您检查网络，未连接]");
-//            return;
         }
         setCurrentStatus(WsStatus.RECONNECT);
         Log.e("liusehngjei", "reconnectCount11111111[" + reconnectCount + "]");
         long delay = reconnectCount * RECONNECT_INTERVAL;
-//        wsMainHandler.postDelayed(reconnectRunnable, delay > RECONNECT_MAX_TIME ? RECONNECT_MAX_TIME : delay);
         wsMainHandler.postDelayed(reconnectRunnable, 10000);
         Log.e("liusehngjei", "reconnectCount[" + reconnectCount + "]");
         reconnectCount++;
@@ -260,7 +246,6 @@ public class WsManager implements IWsManager {
     private synchronized void buildConnect() {
         if (!isNetworkConnected(mContext)) {
             setCurrentStatus(WsStatus.DISCONNECTED);
-//            return;
         }
         switch (getCurrentStatus()) {
             case WsStatus.CONNECTED:
@@ -276,6 +261,12 @@ public class WsManager implements IWsManager {
     @Override
     public boolean sendMessage(String msg) {
         return send(msg);
+    }
+
+    public boolean sendMessage(WsReq req) {
+        if(req.getReqId()==null)
+            req.setReqId(String.valueOf(System.currentTimeMillis()));
+        return send(req.toJsonString());
     }
 
     @Override

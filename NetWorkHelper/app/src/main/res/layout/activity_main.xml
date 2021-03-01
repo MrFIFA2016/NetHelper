@@ -23,18 +23,21 @@
 
     <include layout="@layout/content_main"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/fab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_dialog_email"/>
-
     <Button
         android:id="@+id/sendHttp"
-        android:layout_width="251dp"
-        android:layout_height="112dp"
-        android:text="Button" />
+        android:layout_width="146dp"
+        android:layout_height="71dp"
+        android:layout_gravity="bottom|center|clip_vertical|start"
+        android:layout_margin="@dimen/fab_margin"
+        android:accessibilityLiveRegion="polite"
+        android:text="发送消息" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

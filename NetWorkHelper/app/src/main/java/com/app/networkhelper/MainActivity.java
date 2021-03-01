@@ -3,8 +3,10 @@ package com.app.networkhelper;
 import android.os.Bundle;
 import android.os.Looper;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.networkhelper.to.WsReq;
 import com.app.networkhelper.tools.WsManager;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -15,6 +17,8 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+
+import org.json.JSONObject;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -33,23 +37,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        final WsManager wsManager = new WsManager.Builder().client(
-//                new OkHttpClient().newBuilder()
-//                        .pingInterval(15, TimeUnit.SECONDS)
-//                        .retryOnConnectionFailure(true)
-//                        .build())
-//                .needReconnect(true)
-//                .wsUrl("ws://10.10.133.132:5678")
-//                .build();
-//        wsManager.startConnect();
-
         BootStrap.init();
         BootStrap.load();
 
         BootStrap.wsManager.addMessageListener(new WsManager.MessageListener() {
             @Override
             public void onMessage(String message) {
-                Toast.makeText(MainActivity.this, "主窗口收到消息：" + message, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this, "主窗口收到消息：" + message, Toast.LENGTH_SHORT).show();
+                showInfo(message);
             }
         });
 
@@ -60,12 +55,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "开启WS", Toast.LENGTH_SHORT).show();
                 try {
                     try {
-                        BootStrap.wsManager.sendMessage(new Date().toString());
+                        JSONObject json = new JSONObject();
+                        json.put("请求时间", new Date().toLocaleString());
+                        WsReq req = new WsReq();
+                        req.setMsg(json.toString());
+                        BootStrap.wsManager.sendMessage(req);
                     } catch (Exception e) {
-                        //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 } catch (Exception e) {
-                    //Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -96,6 +93,11 @@ public class MainActivity extends AppCompatActivity {
                 }).start();
             }
         });
+    }
+
+    public void showInfo(String info) {
+        TextView tv = (TextView) findViewById(R.id.info_view);
+        tv.setText(info);
     }
 
     public static void showToast(Toast toast) {
