@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.app.networkhelper.to.WsMsg;
 import com.app.networkhelper.to.WsReq;
 
 import java.util.LinkedList;
@@ -23,8 +24,10 @@ import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 import okio.ByteString;
 
+import static com.app.networkhelper.tools.NetWorkUtil.isNetworkConnected;
+
 public class WsManager implements IWsManager {
-    private final static int RECONNECT_INTERVAL = 10 * 1000;    //重连自增步长
+    private final static int RECONNECT_INTERVAL = 5 * 1000;    //重连自增步长
     private final static long RECONNECT_MAX_TIME = 120 * 1000;   //最大重连间隔
     private Context mContext;
     private String wsUrl;
@@ -52,9 +55,16 @@ public class WsManager implements IWsManager {
     }
 
     public abstract static class MessageListener {
-        public abstract void onMessage(String message);
+        public abstract void onMessage(WsMsg message);
 
         public abstract void onError(String error);
+    }
+
+    private void callMessageListener(String text) {
+        for (MessageListener listener : messageListeners) {
+            WsMsgReader msgReader = new WsMsgReader(text);
+            listener.onMessage(msgReader.read());
+        }
     }
 
     private final WebSocketListener mWebSocketListener = new WebSocketListener() {
@@ -78,9 +88,7 @@ public class WsManager implements IWsManager {
                     @Override
                     public void run() {
                         Log.e("websocket", text);
-                        for (MessageListener listener : messageListeners) {
-                            listener.onMessage(text);
-                        }
+                        callMessageListener(text);
                     }
                 });
             } else {
@@ -210,18 +218,15 @@ public class WsManager implements IWsManager {
         if (!isNeedReconnect | isManualClose) {
             return;
         }
-        Log.e("liusehngjei", "reconnectCount2222222[" + reconnectCount + "]");
+        Log.e("WsManager", "reconnectCount[" + reconnectCount + "]");
         if (!isNetworkConnected(mContext)) {
             setCurrentStatus(WsStatus.DISCONNECTED);
-            Log.e("liusehngjei", "[请您检查网络，未连接]");
+            Log.e("WsManager", "[请您检查网络，未连接]");
         }
         setCurrentStatus(WsStatus.RECONNECT);
-        Log.e("liusehngjei", "reconnectCount11111111[" + reconnectCount + "]");
-        long delay = reconnectCount * RECONNECT_INTERVAL;
-        wsMainHandler.postDelayed(reconnectRunnable, 10000);
-        Log.e("liusehngjei", "reconnectCount[" + reconnectCount + "]");
+        int delay = reconnectCount * RECONNECT_INTERVAL;
+        wsMainHandler.postDelayed(reconnectRunnable, delay);
         reconnectCount++;
-
     }
 
     private void cancelReconnect() {
@@ -265,21 +270,10 @@ public class WsManager implements IWsManager {
         }
     }
 
-    //发送消息
-    @Override
-    public boolean sendMessage(String msg) {
-        return send(msg);
-    }
-
-    public boolean sendMessage(WsReq req) {
-        if (req.getReqId() == null)
-            req.setReqId(String.valueOf(System.currentTimeMillis()));
-        return send(req.toJsonString());
-    }
-
-    @Override
-    public boolean sendMessage(ByteString byteString) {
-        return send(byteString);
+    public boolean sendMessage(WsMsg req) {
+        if (req.getId() == null)
+            req.setId(String.valueOf(System.currentTimeMillis()));
+        return send(req.toString());
     }
 
     private boolean send(Object msg) {
@@ -298,18 +292,6 @@ public class WsManager implements IWsManager {
         return isSend;
     }
 
-    //检查网络是否连接
-    private boolean isNetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            @SuppressLint("MissingPermission") NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null) {
-                return mNetworkInfo.isAvailable();
-            }
-        }
-        return false;
-    }
 
     public static final class Builder {
 

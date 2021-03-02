@@ -6,8 +6,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.networkhelper.to.WsMsg;
 import com.app.networkhelper.to.WsReq;
 import com.app.networkhelper.tools.WsManager;
+import com.app.networkhelper.tools.WsMsgReader;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
 
         BootStrap.wsManager.addMessageListener(new WsManager.MessageListener() {
             @Override
-            public void onMessage(String message) {
-                showInfo(message);
+            public void onMessage(WsMsg message) {
+                showInfo(message.toString());
             }
 
             @Override
@@ -61,7 +63,8 @@ public class MainActivity extends AppCompatActivity {
                     try {
                         JSONObject json = new JSONObject();
                         json.put("请求时间", new Date().toLocaleString());
-                        WsReq req = new WsReq();
+                        WsMsg req = new WsMsg();
+                        req.setSender(0);
                         req.setMsg(json.toString());
                         BootStrap.wsManager.sendMessage(req);
                     } catch (Exception e) {
@@ -100,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showInfo(String info) {
-        TextView tv = (TextView) findViewById(R.id.info_view);
+        TextView tv =findViewById(R.id.info_view);
         tv.setText(info);
     }
 
