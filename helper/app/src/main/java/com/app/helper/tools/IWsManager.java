@@ -1,7 +1,7 @@
 package com.app.helper.tools;
 
 
-import com.app.helper.to.WsMsg;
+import com.app.helper.pojo.WsMsg;
 
 import okhttp3.WebSocket;
 

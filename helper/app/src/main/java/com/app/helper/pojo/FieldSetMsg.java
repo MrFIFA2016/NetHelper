@@ -2,7 +2,7 @@ package com.app.helper.pojo;
 
 import com.alibaba.fastjson.JSONObject;
 
-public class FieldValSetMsg implements Msg, MsgResolver {
+public class FieldSetMsg implements Msg, MsgResolver {
 
     private String className;
 
@@ -37,6 +37,6 @@ public class FieldValSetMsg implements Msg, MsgResolver {
     @Override
     public Msg resolveMsg(WsMsg msg) {
         JSONObject obj = msg.getMsg();
-        return JSONObject.toJavaObject(obj, FieldValSetMsg.class);
+        return JSONObject.toJavaObject(obj, FieldSetMsg.class);
     }
 }

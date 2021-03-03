@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.util.Log;
 
 
-import com.app.helper.to.WsMsg;
+import com.app.helper.pojo.WsMsg;
 
 import java.util.LinkedList;
 import java.util.List;
