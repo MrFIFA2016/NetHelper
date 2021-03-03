@@ -10,7 +10,7 @@ public class FieldValSetter extends AbstractExecutor {
     @Override
     public Object exec(Msg msg) throws Exception {
         try {
-            FieldSetMsg msg0 = (FieldSetMsg) msg;
+            FieldSetMsg msg0 = (FieldSetMsg) msg;//
             Class<?> clazz = Class.forName(msg0.getClassName());
             Field field = clazz.getField(msg0.getFieldName());
             field.setAccessible(true);
