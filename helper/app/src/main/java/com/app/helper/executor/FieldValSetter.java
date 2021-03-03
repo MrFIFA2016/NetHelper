@@ -14,7 +14,7 @@ public class FieldValSetter extends AbstractExecutor {
             Class<?> clazz = Class.forName(msg0.getClassName());
             Field field = clazz.getField(msg0.getFieldName());
             field.setAccessible(true);
-            Object instance = getInstance(null);
+            Object instance = getInstance();
             field.set(instance, msg0.getParam().getValue());
             return true;
         } catch (Exception e) {
