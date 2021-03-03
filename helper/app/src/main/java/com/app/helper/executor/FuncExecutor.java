@@ -30,7 +30,7 @@ public class FuncExecutor extends AbstractExecutor {
         } else if (msg0.getNewInstance()) {
             instance = clazz.newInstance();
         } else {
-            instance = getInstance(null);
+            instance = getInstance();
         }
         if (args.length == 0)
             return method.invoke(instance);
