@@ -1,6 +1,7 @@
 package com.app.helper;
 
 import android.content.Context;
+import android.util.Log;
 
 
 import com.app.helper.executor.AbstractExecutor;
@@ -9,6 +10,7 @@ import com.app.helper.executor.FuncExecutor;
 import com.app.helper.pojo.FieldSetMsg;
 import com.app.helper.pojo.FuncExecMsg;
 import com.app.helper.pojo.Msg;
+import com.app.helper.pojo.NormalMsg;
 import com.app.helper.pojo.WsMsg;
 import com.app.helper.tools.ContextUtil;
 import com.app.helper.tools.WsManager;
@@ -46,12 +48,26 @@ public class BootStrap {
                 public void onMessage(WsMsg message) {
                     Msg msg = null;
                     AbstractExecutor executor = null;
-                    if (message.getType().equals("exec")) {
+                    if ("exec".equals(message.getType())) {
                         msg = new FuncExecMsg().resolveMsg(message);
                         executor = new FuncExecutor();
-                    } else if (message.getType().equals("setField")) {
+                    } else if ("setField".equals(message.getType())) {
                         msg = new FieldSetMsg().resolveMsg(message);
                         executor = new FieldValSetter();
+                    } else {
+                        msg = new NormalMsg().resolveMsg(message);
+                        executor = new AbstractExecutor() {
+                            @Override
+                            public Object exec(Msg msg) throws Exception {
+                                Log.v("BootStrap", msg.toString());
+                                return null;
+                            }
+
+                            @Override
+                            public Object getInstance(Object... args) {
+                                return null;
+                            }
+                        };
                     }
                     try {
                         Object result = executor.exec(msg);

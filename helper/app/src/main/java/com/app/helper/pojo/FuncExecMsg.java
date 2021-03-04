@@ -1,5 +1,7 @@
 package com.app.helper.pojo;
 
+import androidx.annotation.NonNull;
+
 import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
@@ -50,5 +52,10 @@ public class FuncExecMsg implements Msg, MsgResolver {
     public Msg resolveMsg(WsMsg msg) {
         JSONObject obj = msg.getMsg();
         return JSONObject.toJavaObject(obj, FuncExecMsg.class);
+    }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this, true);
     }
 }

@@ -39,4 +39,9 @@ public class FieldSetMsg implements Msg, MsgResolver {
         JSONObject obj = msg.getMsg();
         return JSONObject.toJavaObject(obj, FieldSetMsg.class);
     }
+
+    @Override
+    public String toString() {
+        return JSONObject.toJSONString(this,true);
+    }
 }

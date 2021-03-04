@@ -7,6 +7,7 @@ import android.util.Log;
 
 
 import com.app.helper.pojo.WsMsg;
+import com.app.helper.pojo.WsMsgReader;
 
 import java.util.LinkedList;
 import java.util.List;

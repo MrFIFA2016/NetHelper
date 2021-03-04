@@ -1,4 +1,4 @@
-package com.app.helper.tools;
+package com.app.helper.pojo;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -28,11 +28,17 @@ public class WsMsgReader {
 
     public WsMsg read() {
         WsMsg msg = new WsMsg();
-        JSONObject json = JSONObject.parseObject(text);
-        msg.setId(json.getString("id"));
-        msg.setSender(json.getInteger("sender"));
-        msg.setType(json.getString("type"));
-        msg.setMsg(json.getJSONObject("msg"));
+        try {
+            JSONObject json = JSONObject.parseObject(text);
+            msg.setId(json.getString("id"));
+            msg.setSender(json.getInteger("sender"));
+            msg.setType(json.getString("type"));
+            msg.setMsg(json.getJSONObject("msg"));
+        } catch (Exception e) {
+            JSONObject json = new JSONObject();
+            json.put("msg", text);
+            msg.setMsg(json);
+        }
         return msg;
     }
 }
