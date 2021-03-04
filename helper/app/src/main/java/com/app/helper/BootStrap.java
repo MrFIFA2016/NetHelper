@@ -2,6 +2,7 @@ package com.app.helper;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.app.helper.executor.AbstractExecutor;
@@ -61,6 +62,7 @@ public class BootStrap {
                             @Override
                             public Object exec(Msg msg) throws Exception {
                                 Log.v("BootStrap", msg.toString());
+                                Toast.makeText(ContextUtil.getContextReflect(), msg.toString(), Toast.LENGTH_LONG).show();
                                 return null;
                             }
 
