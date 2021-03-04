@@ -31,6 +31,7 @@ public class BootStrap {
         String info = "OK!";
         try {
             initWebSocket();
+            Log.i("BootStrap.init", "ws init success ! ");
         } catch (Exception e) {
             e.printStackTrace();
             info = e.getMessage();
@@ -81,6 +82,8 @@ public class BootStrap {
 
                 }
             });
+
+            Log.i("BootStrap.load", "ws connect success ! " + serverUri);
         } catch (Exception e) {
             e.printStackTrace();
             info = e.getMessage();
