@@ -14,8 +14,6 @@ public class FuncExecutor extends AbstractExecutor {
     public Object exec(Msg msg) throws Exception {
         FuncExecMsg msg0 = (FuncExecMsg) msg;
         Class<?> clazz = Class.forName(msg0.getSignature());
-
-
         List<Param> params = msg0.getParams();
         Collections.sort(params);
         Class[] types = new Class[params.size()];

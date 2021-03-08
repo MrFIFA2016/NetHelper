@@ -1,0 +1,16 @@
+server:
+  port: 5678
+  #request header is too large
+  max-http-header-size: 102400
+
+spring:
+  http:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+
+
+# ---------------------------------- logback -----------------------------------
+logging:
+  config: classpath:logback-boot.xml
