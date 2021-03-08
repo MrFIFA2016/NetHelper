@@ -1,0 +1,12 @@
+{
+  "signature": "xx",
+  "method": "cx",
+  "newInstance": true,
+  "params": [
+    {
+      "type": "int",
+      "value": 999,
+      "order": 1
+    }
+  ]
+}

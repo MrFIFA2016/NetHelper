@@ -33,25 +33,8 @@ public class NetHelperService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("NetHelperService", "NetHelperService onStartCommand");
-//        ExecutorService threadPool = Executors.newCachedThreadPool();
-//        threadPool.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                int time = 0;
-//                while (true) {
-//                    Log.d("NetHelperService", "HeartBeat " + time);
-////                    try {
-////                        Thread.sleep(10000);
-////                    } catch (InterruptedException e) {
-////                        e.printStackTrace();
-////                    }
-//                    time++;
-//                }
-//            }
-//        });
         BootStrap.init();
         BootStrap.load();
-
         return super.onStartCommand(intent, flags, startId);
     }
 }

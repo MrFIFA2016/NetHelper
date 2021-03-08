@@ -14,15 +14,19 @@ public class FuncExecutor extends AbstractExecutor {
     public Object exec(Msg msg) throws Exception {
         FuncExecMsg msg0 = (FuncExecMsg) msg;
         Class<?> clazz = Class.forName(msg0.getSignature());
-        Method method = clazz.getMethod(msg0.getMethod());
-        method.setAccessible(true);
+
 
         List<Param> params = msg0.getParams();
         Collections.sort(params);
+        Class[] types = new Class[params.size()];
         Object[] args = new Object[params.size()];
         for (int i = 0; i < params.size(); i++) {
             args[i] = params.get(i).getValue();
+            types[i] = params.get(i).getPrimitiveClass();
         }
+        Method method = clazz.getMethod(msg0.getMethod(), types);
+        method.setAccessible(true);
+
         boolean isStatic = Modifier.isStatic(method.getModifiers());
         Object instance;
         if (isStatic) {
@@ -34,6 +38,7 @@ public class FuncExecutor extends AbstractExecutor {
         }
         if (args.length == 0)
             return method.invoke(instance);
+
         return method.invoke(instance, args);
     }
 
