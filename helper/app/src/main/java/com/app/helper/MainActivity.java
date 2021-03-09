@@ -1,6 +1,7 @@
 package com.app.helper;
 
 import android.app.Activity;
+import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -17,7 +18,11 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         //启动service
         Intent service = new Intent(MainActivity.this, NetHelperService.class);
-        MainActivity.this.startService(service);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            MainActivity.this.startForegroundService(service);
+        } else {
+            MainActivity.this.startService(service);
+        }
     }
 
     public void showInfo(String content) {
@@ -29,6 +34,7 @@ public class MainActivity extends Activity {
         super.onResume();
         finish();
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
