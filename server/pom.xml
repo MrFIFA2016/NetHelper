@@ -44,5 +44,28 @@
             <version>3.7</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- 指定启动入口 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- 启动类 -->
+                <configuration>
+                    <fork>true</fork>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <mainClass>${spring.boot.mainClass}</mainClass>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
 
 </project>

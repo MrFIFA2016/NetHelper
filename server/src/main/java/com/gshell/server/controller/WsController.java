@@ -14,7 +14,7 @@ public class WsController {
 
     @PostMapping("/send")
     public BaseResp sendCmd(@RequestBody WsMsg msg) {
-        WebSocketServer.sendInfo(msg.toString(), null);
-        return BaseResp.success();
+        int SENDED = WebSocketServer.sendInfo(msg.toString(), null);
+        return BaseResp.map().append("sended", SENDED);
     }
 }
