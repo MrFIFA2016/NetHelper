@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
@@ -13,6 +14,10 @@ import com.app.helper.hook.hooker.LogHooker;
 import com.swift.sandhook.SandHook;
 import com.swift.sandhook.SandHookConfig;
 import com.swift.sandhook.wrapper.HookErrorException;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 
 public class MainActivity extends Activity {
 
@@ -32,6 +37,10 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        BootStrap.init();
+        BootStrap.load();
+
+
         SandHookConfig.DEBUG = BuildConfig.DEBUG;
 
         if (Build.VERSION.SDK_INT == 29 && getPreviewSDKInt() > 0) {
@@ -44,7 +53,7 @@ public class MainActivity extends Activity {
         SandHook.disableDex2oatInline(false);
 
         if (SandHookConfig.SDK_INT >= Build.VERSION_CODES.P) {
-            SandHook.passApiCheck();
+            SandHook.passApiCheck();//允许反射调用hidden Api
         }
 
         try {
@@ -61,6 +70,19 @@ public class MainActivity extends Activity {
         } else {
             MainActivity.this.startService(service);
         }
+
+//        try {
+//            test();
+//        } catch (Throwable throwable) {
+//            throwable.printStackTrace();
+//        }
+    }
+    private void test() throws Throwable {
+        Class<?> hclass = Class.forName("android.util.Log");
+        Method[] declaredFields = hclass.getDeclaredMethods();
+        for (Method declaredField : declaredFields) {
+            Log.i("Service", "declareMethod: " + declaredField.toGenericString());
+        }
     }
 
     public void showInfo(String content) {
@@ -76,6 +98,7 @@ public class MainActivity extends Activity {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        //Reflection.unseal(base);
         //解决4.x运行崩溃的问题
         MultiDex.install(this);
     }

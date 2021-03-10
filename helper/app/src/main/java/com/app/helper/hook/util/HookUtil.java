@@ -14,9 +14,9 @@ import java.util.Date;
 
 public class HookUtil {
 
-//    private static DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm:ss.SSS");
+    private static DateFormat dateFormat = new SimpleDateFormat("yy-MM-dd:HH:mm:ss.SSS");
 
-    private static Handler mHandler = new Handler(Looper.getMainLooper());
+    private static Handler mHandler = new Handler(Looper.myLooper());
 
     private static Runnable runnable = new Runnable() {
         @Override
@@ -29,11 +29,9 @@ public class HookUtil {
         return SandHook.getObject(address);
     }
 
-    public static boolean sendLogToServer(String level, String tag, String msg) {
+    public synchronized static boolean sendLogToServer(String level, String tag, String msg) {
         if (!BootStrap.sendLog)
             return true;
-
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yy:HH:mm:ss.SSS");
 
         Date date = new Date();
         String id = dateFormat.format(date);
@@ -44,19 +42,20 @@ public class HookUtil {
         content.put(level + "/" + tag, msg);
         wsMsg.setMsg(content);
         return BootStrap.wsManager.sendMessage(wsMsg);
-//        System.out.printf(wsMsg.toString());
-//        return true;
     }
 
     public static int logW(String tag, String w) {
          sendLogToServer("warn", tag, w);
-       // mHandler.post(runnable);
-        return Log.w(tag, w);
+        return 1;
     }
 
     public static int logI(String tag, String i) {
         sendLogToServer("info", tag, i);
-        //mHandler.post(runnable);
-        return Log.i(tag, i);
+        return 1;
+    }
+
+    public static int logV(String tag, String v) {
+        sendLogToServer("verbose", tag, v);
+        return 1;
     }
 }

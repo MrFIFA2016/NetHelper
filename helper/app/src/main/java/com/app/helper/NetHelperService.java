@@ -47,9 +47,6 @@ public class NetHelperService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.v("NetHelperService", "NetHelperService onStartCommand");
 
-        BootStrap.init();
-        BootStrap.load();
-
         String CHANNEL_ONE_ID = "com.app.helper";
         String CHANNEL_ONE_NAME = "Channel One";
 
