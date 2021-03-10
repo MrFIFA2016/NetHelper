@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import com.swift.sandhook.SandHook;
 import com.swift.sandhook.wrapper.HookErrorException;
+
 import okhttp3.OkHttpClient;
 
 public class BootStrap {
@@ -21,7 +22,7 @@ public class BootStrap {
     //------------------------配置区---------------------------
 
 
-    public static String serverUri = "10.10.133.132:5678";
+    public static String serverUri = "192.168.1.21:5678";
 
     public static boolean sendLog = true;
 
@@ -51,9 +52,12 @@ public class BootStrap {
             wsManager.addMessageListener(new WsManager.MessageListener() {
                 @Override
                 public void onMessage(WsMsg message) {//收到服务器消息处理
+                    //long address = SandHook.getObjectAddress(message);
                     MsgHandler.handleMsg(message, content -> {
                         Toast.makeText(ContextUtil.getContextReflect(), content, Toast.LENGTH_LONG).show();
                     });
+//                    Object object = SandHook.getObject(address);
+//                    Log.i("type", object.toString());
                 }
 
                 @Override

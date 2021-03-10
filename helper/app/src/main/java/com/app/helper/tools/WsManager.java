@@ -25,7 +25,7 @@ import static com.app.helper.tools.NetWorkUtil.isNetworkConnected;
 
 
 public class WsManager implements IWsManager {
-    private final static int RECONNECT_INTERVAL = 5 * 1000;    //重连自增步长
+    private final static int RECONNECT_INTERVAL = 2 * 1000;    //重连自增步长
     private final static long RECONNECT_MAX_TIME = 120 * 1000;   //最大重连间隔
     private Context mContext;
     private String wsUrl;
@@ -85,7 +85,7 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.w("websocket", text);
+                        Log.e("websocket", text);
                         callMessageListener(text);
                     }
                 });

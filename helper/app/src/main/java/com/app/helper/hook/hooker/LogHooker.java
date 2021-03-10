@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 @HookClass(Log.class)
 public class LogHooker {
 
-    @HookMethodBackup("w")
+    @HookMethodBackup("e")
     @SkipParamCheck
     static Method backupW;
 
@@ -18,7 +18,7 @@ public class LogHooker {
 //    @SkipParamCheck
 //    static Method backupI;
 
-    @HookMethod("w")
+    @HookMethod("e")
     public static int onW(String tag, @Param("java.lang.String") Object msg) throws Throwable {
         HookUtil.logW(tag, msg.toString());
         return (int) SandHook.callOriginByBackup(backupW, null, tag, msg);
