@@ -17,7 +17,8 @@ public class WsMsg {
 
     public enum MsgType {
         EXEC("exec"),
-        SET_FIELD("setField");
+        SET_FIELD("setField"),
+        CLIENT_LOG("clientLog");
 
         String type;
 

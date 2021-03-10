@@ -85,7 +85,7 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("websocket", text);
+                        Log.w("websocket", text);
                         callMessageListener(text);
                     }
                 });

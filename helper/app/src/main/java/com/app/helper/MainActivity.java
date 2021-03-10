@@ -9,13 +9,51 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
+import com.app.helper.hook.hooker.LogHooker;
+import com.swift.sandhook.SandHook;
+import com.swift.sandhook.SandHookConfig;
+import com.swift.sandhook.wrapper.HookErrorException;
 
 public class MainActivity extends Activity {
+
+    public static int getPreviewSDKInt() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            try {
+                return Build.VERSION.PREVIEW_SDK_INT;
+            } catch (Throwable e) {
+                // ignore
+            }
+        }
+        return 0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        SandHookConfig.DEBUG = BuildConfig.DEBUG;
+
+        if (Build.VERSION.SDK_INT == 29 && getPreviewSDKInt() > 0) {
+            // Android R preview
+            SandHookConfig.SDK_INT = 30;
+        }
+
+        SandHook.disableVMInline();
+        SandHook.tryDisableProfile(getPackageName());
+        SandHook.disableDex2oatInline(false);
+
+        if (SandHookConfig.SDK_INT >= Build.VERSION_CODES.P) {
+            SandHook.passApiCheck();
+        }
+
+        try {
+            SandHook.addHookClass(LogHooker.class);
+        } catch (HookErrorException e) {
+            e.printStackTrace();
+        }
+
+
         //启动service
         Intent service = new Intent(MainActivity.this, NetHelperService.class);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

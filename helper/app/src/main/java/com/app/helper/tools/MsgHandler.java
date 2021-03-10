@@ -1,6 +1,5 @@
 package com.app.helper.tools;
 
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -44,13 +43,13 @@ public class MsgHandler {
         }
         try {
             Object result = executor.exec(msg);
-            callBack.call(String.valueOf(result));
+            callBack.onComplated(String.valueOf(result));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public interface CallBack {
-        public void call(String content);
+        void onComplated(String content);
     }
 }

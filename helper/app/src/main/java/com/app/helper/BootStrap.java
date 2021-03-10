@@ -1,10 +1,10 @@
 package com.app.helper;
 
-import android.app.Notification;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.app.helper.hook.hooker.LogHooker;
 import com.app.helper.pojo.WsMsg;
 import com.app.helper.tools.ContextUtil;
 import com.app.helper.tools.MsgHandler;
@@ -12,11 +12,21 @@ import com.app.helper.tools.WsManager;
 
 import java.util.concurrent.TimeUnit;
 
+import com.swift.sandhook.SandHook;
+import com.swift.sandhook.wrapper.HookErrorException;
 import okhttp3.OkHttpClient;
 
 public class BootStrap {
 
-    public static String serverUri = "192.168.1.21:5678";
+    //------------------------配置区---------------------------
+
+
+    public static String serverUri = "10.10.133.132:5678";
+
+    public static boolean sendLog = true;
+
+
+    //--------------------------------------------------------
 
     public static WsManager wsManager;
 
@@ -25,6 +35,8 @@ public class BootStrap {
         try {
             initWebSocket();
             Log.i("BootStrap.initWebSocket", "ws init success ! ");
+            initSandHook();
+            Log.i("BootStrap.initSandHook", "sandhook init success ! ");
         } catch (Exception e) {
             e.printStackTrace();
             info = e.getMessage();
@@ -62,6 +74,14 @@ public class BootStrap {
             wsManager.stopConnect();
     }
 
+    private static void initSandHook() {
+//        try {
+//            SandHook.addHookClass(LogHooker.class);
+//        } catch (HookErrorException e) {
+//            e.printStackTrace();
+//        }
+    }
+
     private static void initWebSocket() {
         Context context = ContextUtil.getContextReflect();
         wsManager = new WsManager.Builder(context).client(
@@ -72,7 +92,6 @@ public class BootStrap {
                 .needReconnect(true)
                 .wsUrl("ws://" + serverUri)
                 .build();
-
     }
 
 }
