@@ -1,5 +1,6 @@
 package com.app.helper.executor;
 
+import com.app.helper.hook.util.HookUtil;
 import com.app.helper.pojo.FuncExecMsg;
 import com.app.helper.pojo.Msg;
 import com.app.helper.pojo.Param;
@@ -32,7 +33,7 @@ public class FuncExecutor extends AbstractExecutor {
         } else if (msg0.getNewInstance()) {
             instance = clazz.newInstance();
         } else {
-            instance = getInstance();
+            instance = getInstance(msg0.getAddress());
         }
         if (args.length == 0)
             return method.invoke(instance);
@@ -42,6 +43,6 @@ public class FuncExecutor extends AbstractExecutor {
 
     @Override
     public Object getInstance(Object... args) {
-        return null;
+        return HookUtil.getObject((Long) args[0]);
     }
 }

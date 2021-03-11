@@ -19,6 +19,8 @@ public class FuncExecMsg implements Msg, MsgResolver {
 
     private Boolean newInstance;
 
+    private Long address;
+
     @Override
     public Msg resolveMsg(WsMsg msg) {
         JSONObject obj = msg.getMsg();

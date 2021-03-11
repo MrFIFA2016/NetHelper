@@ -32,7 +32,7 @@ public class ConstructionHooker {
     @HookMethod
     public static void onConstructionHook(@ThisObject TestClass thiz, int a) throws Throwable {
         SandHook.callOriginByBackup(constructionMethodBackup, thiz, a);
-        System.out.printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + thiz.toString());
+        System.out.printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + thiz);
         HookUtil.recordData(thiz.toString(), HookUtil.getAddress(thiz));
     }
 
