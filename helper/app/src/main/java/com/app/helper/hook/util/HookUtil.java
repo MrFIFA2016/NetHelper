@@ -29,6 +29,10 @@ public class HookUtil {
         return SandHook.getObject(address);
     }
 
+    public static long getAddress(Object object) {
+        return SandHook.getObjectAddress(object);
+    }
+
     public synchronized static boolean sendLogToServer(String level, String tag, String msg) {
         if (!BootStrap.sendLog)
             return true;
@@ -44,8 +48,20 @@ public class HookUtil {
         return BootStrap.wsManager.sendMessage(wsMsg);
     }
 
+    public static <T> boolean recordData(String tag, T data) {
+        Date date = new Date();
+        String id = dateFormat.format(date);
+        WsMsg wsMsg = new WsMsg();
+        wsMsg.setId(id);
+        wsMsg.setType(WsMsg.MsgType.DATA_RECORD.name());
+        JSONObject content = new JSONObject();
+        content.put(tag, data);
+        wsMsg.setMsg(content);
+        return BootStrap.wsManager.sendMessage(wsMsg);
+    }
+
     public static int logW(String tag, String w) {
-         sendLogToServer("warn", tag, w);
+        sendLogToServer("warn", tag, w);
         return 1;
     }
 

@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.multidex.MultiDex;
+import com.app.helper.hook.TestClass;
+import com.app.helper.hook.hooker.ConstructionHooker;
 import com.app.helper.hook.hooker.LogHooker;
 import com.swift.sandhook.SandHook;
 import com.swift.sandhook.SandHookConfig;
@@ -57,11 +59,14 @@ public class MainActivity extends Activity {
         }
 
         try {
-            SandHook.addHookClass(LogHooker.class);
+            SandHook.addHookClass(LogHooker.class, ConstructionHooker.class);
         } catch (HookErrorException e) {
             e.printStackTrace();
         }
 
+        TestClass testClass = new TestClass(5);
+
+        testClass.add2();
 
         //启动service
         Intent service = new Intent(MainActivity.this, NetHelperService.class);
@@ -77,6 +82,7 @@ public class MainActivity extends Activity {
 //            throwable.printStackTrace();
 //        }
     }
+
     private void test() throws Throwable {
         Class<?> hclass = Class.forName("android.util.Log");
         Method[] declaredFields = hclass.getDeclaredMethods();
