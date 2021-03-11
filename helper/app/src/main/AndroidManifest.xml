@@ -9,6 +9,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:usesCleartextTraffic="true"
+            android:networkSecurityConfig="@xml/config"
             android:theme="@android:style/Theme.NoDisplay" tools:targetApi="m">
         <!-- 设置activity为不显示 -->
         <activity

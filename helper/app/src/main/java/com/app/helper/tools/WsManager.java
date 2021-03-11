@@ -41,7 +41,7 @@ public class WsManager implements IWsManager {
     private Runnable reconnectRunnable = new Runnable() {
         @Override
         public void run() {
-            Log.e("websocket", "服务器重连接中...");
+            Log.e("websocket/reconRunnable", wsUrl + "服务器重连接中...");
             buildConnect();
         }
     };
@@ -75,7 +75,7 @@ public class WsManager implements IWsManager {
             if (Looper.myLooper() != Looper.getMainLooper()) {
                 onMessage(null, " 已连接！");
             } else {
-                Log.e("websocket", "服务器连接成功");
+                Log.e("websocket/onOpen", "服务器连接成功");
             }
         }
 
@@ -85,12 +85,12 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("websocket", text);
+                        Log.e("websocket/onMessage", text);
                         callMessageListener(text);
                     }
                 });
             } else {
-                Log.e("websocket", "WsManager-----onMessage");
+                Log.e("websocket/onMessage", "WsManager-----onMessage");
             }
         }
 
@@ -100,11 +100,11 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("websocket", "服务器连接关闭中");
+                        Log.e("websocket/onClosing", "服务器连接关闭中");
                     }
                 });
             } else {
-                Log.e("websocket", "服务器连接关闭中");
+                Log.e("websocket/onClosing", "服务器连接关闭中");
             }
         }
 
@@ -117,11 +117,11 @@ public class WsManager implements IWsManager {
                 wsMainHandler.post(new Runnable() {
                     @Override
                     public void run() {
-                        Log.e("websocket", "服务器连接已关闭");
+                        Log.e("websocket/onClosed", "服务器连接已关闭");
                     }
                 });
             } else {
-                Log.e("websocket", "服务器连接已关闭");
+                Log.e("websocket/onClosed", "服务器连接已关闭");
             }
         }
 
@@ -136,11 +136,11 @@ public class WsManager implements IWsManager {
                     wsMainHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            Log.e("websocket", "服务器连接失败");
+                            Log.e("websocket/onFailure", "服务器连接失败");
                         }
                     });
                 } else {
-                    Log.e("websocket", "服务器连接失败");
+                    Log.e("websocket/onFailure", "服务器连接失败");
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -176,6 +176,7 @@ public class WsManager implements IWsManager {
                 mLock.unlock();
             }
         } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -216,10 +217,10 @@ public class WsManager implements IWsManager {
         if (!isNeedReconnect | isManualClose) {
             return;
         }
-        Log.e("WsManager", "reconnectCount[" + reconnectCount + "]");
+        Log.e("WsManager/tryReconnect", "reconnectCount[" + reconnectCount + "]");
         if (!isNetworkConnected(mContext)) {
             setCurrentStatus(WsStatus.DISCONNECTED);
-            Log.e("WsManager", "[请您检查网络，未连接]");
+            Log.e("WsManager/tryReconnect", "[请您检查网络，未连接]");
         }
         setCurrentStatus(WsStatus.RECONNECT);
         int delay = reconnectCount * RECONNECT_INTERVAL;
@@ -248,7 +249,7 @@ public class WsManager implements IWsManager {
             boolean isClosed = mWebSocket.close(WsStatus.CODE.NORMAL_CLOSE, WsStatus.TIP.NORMAL_CLOSE);
             //非正常关闭连接
             if (!isClosed) {
-                Log.e("websocket", "服务器连接失败");
+                Log.e("websocket/disconnect", "服务器连接失败");
             }
         }
         setCurrentStatus(WsStatus.DISCONNECTED);
