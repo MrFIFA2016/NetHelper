@@ -3,6 +3,7 @@ package com.app.helper.hook.util;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
 import com.alibaba.fastjson.JSONObject;
 import com.app.helper.BootStrap;
 import com.app.helper.pojo.WsMsg;
@@ -26,10 +27,18 @@ public class HookUtil {
     };
 
     public static Object getObject(long address) {
+        if (!SandHook.canGetObject()) {
+            logW("getObject", "当前环境不支持地址获取对象:" + address);
+            System.out.println("当前环境不支持地址获取对象:" + address);
+        }
         return SandHook.getObject(address);
     }
 
     public static long getAddress(Object object) {
+        if (!SandHook.canGetObjectAddress()) {
+            logW("getObject", "当前环境不支持对象地址获取:" + object);
+            System.out.println("当前环境不支持对象地址获取:" + object);
+        }
         return SandHook.getObjectAddress(object);
     }
 

@@ -1,6 +1,7 @@
 package com.app.helper.hook.hooker;
 
 import android.util.Log;
+
 import com.app.helper.hook.TestClass;
 import com.app.helper.hook.util.HookUtil;
 import com.swift.sandhook.SandHook;
@@ -32,7 +33,7 @@ public class ConstructionHooker {
     @HookMethod
     public static void onConstructionHook(@ThisObject TestClass thiz, int a) throws Throwable {
         SandHook.callOriginByBackup(constructionMethodBackup, thiz, a);
-        System.out.printf("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" + thiz);
+        Log.e("onConstructionHook: ", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  " +  HookUtil.getAddress(thiz));
         HookUtil.recordData(thiz.toString(), HookUtil.getAddress(thiz));
     }
 

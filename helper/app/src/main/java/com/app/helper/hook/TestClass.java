@@ -11,18 +11,24 @@ public class TestClass {
         this.a = a + 1;
     }
 
-    public void add1 () {
+    public void add1() {
         a++;
         b++;
         throw new RuntimeException("test exception");
     }
 
-    public void add2 () {
+    public void add2() {
         a++;
         b++;
     }
 
-    public void testNewHookApi (MainActivity activity, int x) {
+    public int add3() {
+        a++;
+        b++;
+        return a + b;
+    }
+
+    public void testNewHookApi(MainActivity activity, int x) {
         x++;
         a++;
         b++;
