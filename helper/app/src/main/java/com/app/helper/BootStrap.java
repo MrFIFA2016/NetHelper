@@ -22,7 +22,8 @@ public class BootStrap {
     //------------------------配置区---------------------------
 
 
-    public static String serverUri = "192.168.1.21:5678";
+    //public static String serverUri = "192.168.1.21:5678";
+    public static String serverUri = "10.10.133.79:5678";
 
     public static boolean sendLog = true;
 

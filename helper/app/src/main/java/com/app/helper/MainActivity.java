@@ -33,7 +33,7 @@ public class MainActivity extends Activity {
         }
         return 0;
     }
-static TestClass testClass;
+TestClass testClass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

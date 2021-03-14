@@ -33,8 +33,8 @@ public class ConstructionHooker {
     @HookMethod
     public static void onConstructionHook(@ThisObject TestClass thiz, int a) throws Throwable {
         SandHook.callOriginByBackup(constructionMethodBackup, thiz, a);
-        Log.e("onConstructionHook: ", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  " +  HookUtil.getAddress(thiz));
-        HookUtil.recordData(thiz.toString(), HookUtil.getAddress(thiz));
+//        Log.e("onConstructionHook: ", "================" + HookUtil.getAddress(thiz));
+        HookUtil.recordData("============== " + thiz.getClass().getName() + " =======地址：   ", HookUtil.getAddress(thiz));
     }
 
 
